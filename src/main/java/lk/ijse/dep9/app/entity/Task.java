@@ -6,27 +6,21 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Task implements SuperEntity{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    @Column(nullable = false)
-    private String content;
-    @Enumerated(EnumType.STRING)
-    private Status status;
-    @JoinColumn(name = "project_id", referencedColumnName = "id", nullable = false)
-    @ManyToOne
-    private Project project;
 
-    public Task(String content, Status status, Project project) {
+    private int id;
+    private String content;
+    private Status status;
+    private int projectId;
+
+    public Task(String content, Status status, int projectId) {
         this.content = content;
         this.status = status;
-        this.project = project;
+        this.projectId = projectId;
     }
 
     public static enum Status{
