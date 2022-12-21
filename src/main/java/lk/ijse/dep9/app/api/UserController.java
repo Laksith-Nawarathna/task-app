@@ -1,6 +1,7 @@
 package lk.ijse.dep9.app.api;
 
 import lk.ijse.dep9.app.dto.UserDTO;
+import lk.ijse.dep9.app.service.custom.UserService;
 import lk.ijse.dep9.app.util.ValidationGroups;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.Errors;
@@ -28,10 +29,16 @@ public class UserController {
 //        }
 //    }
 
+    private UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(consumes = "application/json")
     public void createUserAccount(@Validated(ValidationGroups.Create.class) @RequestBody UserDTO user) {
-        System.out.println(user);
+        userService.createNewUserAccount(user);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

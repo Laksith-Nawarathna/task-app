@@ -24,7 +24,7 @@ public class WebRootConfig {
         return jndi;
     }
 
-    /* a connection is created per request */
+    /* a connection is created per request and only managed until response created*/
     @Bean(destroyMethod = "close")
     @RequestScope
     public Connection connection(DataSource dataSource) throws SQLException {
