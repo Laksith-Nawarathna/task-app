@@ -1,9 +1,11 @@
 package lk.ijse.dep9.app;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.jndi.JndiObjectFactoryBean;
+import org.springframework.web.context.annotation.RequestScope;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -24,9 +26,15 @@ public class WebRootConfig {
 
     /* a connection is created per request */
     @Bean(destroyMethod = "close")
-    @Scope("request")
+    @RequestScope
     public Connection connection(DataSource dataSource) throws SQLException {
         return dataSource.getConnection();
+    }
+
+    /* for entity dto transform */
+    @Bean
+    public ModelMapper modelMapper(){
+        return new ModelMapper();
     }
 
 }

@@ -16,8 +16,12 @@ import java.util.Optional;
 @Component
 public class TaskDAOImpl implements TaskDAO {
 
-    @Autowired
-    private Connection connection;
+    private final Connection connection;
+
+    public TaskDAOImpl(Connection connection) {
+        this.connection = connection;
+    }
+
     @Override
     public Task save(Task task) {
         try {
