@@ -20,12 +20,9 @@ import java.util.Optional;
 @Component
 public class UserDAOImpl implements UserDAO {
 
-    private final Connection connection;
-
     private final JdbcTemplate jdbc;
 
-    public UserDAOImpl(Connection connection, JdbcTemplate jdbc) {
-        this.connection = connection;
+    public UserDAOImpl(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
     }
 
@@ -67,23 +64,19 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public List<?> findAll() {
 
-        return jdbc.query("SELECT * FROM User", rst -> {
-            ArrayList<User> userList = new ArrayList<>();
-            while (rst.next()){
-                userList.add(new User(rst.getString("username"), rst.getString("password"),
-                        rst.getString("full_name")));
-            }
-            return userList;
+        return jdbc.query("SELECT * FROM User", (rst, rowNum) -> {
+//            ArrayList<User> userList = new ArrayList<>();
+//            while (rst.next()){
+                return new User(rst.getString("username"), rst.getString("password"),
+                        rst.getString("full_name"));
+//            return userList;
         });
     }
 
     @Override
     public long count() {
 
-        return jdbc.query("SELECT COUNT(username) FROM User", rst -> {
-            rst.next();
-            return rst.getLong(1);
-        });
+        return jdbc.queryForObject("SELECT COUNT(username) FROM User", Long.class);
 
     }
 
