@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.jndi.JndiObjectFactoryBean;
@@ -32,7 +33,12 @@ public class WebRootConfig {
     @Bean
     @RequestScope
     public Connection connection(DataSource ds) throws SQLException {
-        return DataSourceUtils.getConnection(ds);
+        return DataSourceUtils.getConnection(ds); // to work with transactions DataSourceUtils is required
+    }
+
+    @Bean
+    public JdbcTemplate jdbcTemplate(DataSource ds){
+        return new JdbcTemplate(ds);
     }
 
     /* Platform transaction manager */
