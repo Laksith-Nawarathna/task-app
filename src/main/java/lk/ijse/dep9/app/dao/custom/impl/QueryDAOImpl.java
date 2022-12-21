@@ -12,9 +12,9 @@ import java.sql.Connection;
 @Component
 public class QueryDAOImpl implements QueryDAO {
 
-    private final Connection connection;
+//    private final Connection connection;
 
-    public QueryDAOImpl(Connection connection) {
-        this.connection = connection;
-    }
+//    public QueryDAOImpl(Connection connection) {
+//        this.connection = connection;
+//    }
 }
