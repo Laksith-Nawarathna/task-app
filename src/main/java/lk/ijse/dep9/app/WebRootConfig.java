@@ -21,6 +21,8 @@ import java.sql.SQLException;
 @EnableTransactionManagement
 public class WebRootConfig {
 
+    /* a connection is created by JNDI Data Source per request (therefore new thread)
+     and only managed until response is created*/
     @Bean
     public JndiObjectFactoryBean dataSource(){
         JndiObjectFactoryBean jndi = new JndiObjectFactoryBean();
@@ -36,6 +38,7 @@ public class WebRootConfig {
 //        return DataSourceUtils.getConnection(ds); // to work with transactions DataSourceUtils is required
 //    }
 
+    /* Here jdbc template makes a connection for an incoming request and associate it with a new thread */
     @Bean
     public JdbcTemplate jdbcTemplate(DataSource ds){
         return new JdbcTemplate(ds);
