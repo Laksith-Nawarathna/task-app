@@ -15,7 +15,6 @@ import java.sql.SQLException;
 
 
 @Component
-@Scope("request")
 public class UserServiceImpl implements UserService {
 
     //private UserDAO userDAO;
