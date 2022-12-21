@@ -50,15 +50,15 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public Optional<?> findById(String username) {
 
-        return jdbc.query("SELECT FULL_NAME, PASSWORD FROM User WHERE username = ?", rs -> {
+        return Optional.ofNullable(jdbc.query("SELECT FULL_NAME, PASSWORD FROM User WHERE username = ?", rs -> {
 //            if (rs.next()){
-                return Optional.of(new User(username,
+                return new User(username,
                         rs.getString("password"),
-                        rs.getString("full_name")));
+                        rs.getString("full_name"));
 //            }else{
 //                return Optional.empty();
 //            }
-        }, username);
+        }, username));
     }
 
     @Override

@@ -30,11 +30,11 @@ public class WebRootConfig {
     }
 
     /* a connection is created per request and only managed until response created*/
-    @Bean
-    @RequestScope
-    public Connection connection(DataSource ds) throws SQLException {
-        return DataSourceUtils.getConnection(ds); // to work with transactions DataSourceUtils is required
-    }
+//    @Bean
+//    @RequestScope
+//    public Connection connection(DataSource ds) throws SQLException {
+//        return DataSourceUtils.getConnection(ds); // to work with transactions DataSourceUtils is required
+//    }
 
     @Bean
     public JdbcTemplate jdbcTemplate(DataSource ds){
