@@ -30,7 +30,7 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(consumes = "application/json")
-    public void createUserAccount(@Valid @RequestBody UserDTO user) {
+    public void createUserAccount(@Validated(ValidationGroups.Create.class) @RequestBody UserDTO user) {
         System.out.println(user);
     }
 
