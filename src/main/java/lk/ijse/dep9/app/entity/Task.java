@@ -14,7 +14,7 @@ public class Task implements SuperEntity{
 
     private int id;
     private String content;
-    private Status status;
+    private Status status = Status.NOT_COMPLETED;
     private int projectId;
 
     public Task(String content, Status status, int projectId) {
@@ -23,7 +23,7 @@ public class Task implements SuperEntity{
         this.projectId = projectId;
     }
 
-    public static enum Status{
+    public enum Status {
         COMPLETED, NOT_COMPLETED
     }
 }
