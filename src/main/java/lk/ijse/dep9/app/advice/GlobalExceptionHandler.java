@@ -1,6 +1,8 @@
 package lk.ijse.dep9.app.advice;
 
+import lk.ijse.dep9.app.exceptions.AccessDeniedException;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -40,6 +42,28 @@ public class GlobalExceptionHandler {
         errorAttributes.put("status", HttpStatus.CONFLICT.value());
         errorAttributes.put("error", HttpStatus.CONFLICT.getReasonPhrase());
         errorAttributes.put("message", "Duplicate entity found");
+        errorAttributes.put("timestamp", new Date().toString());
+        return errorAttributes;
+    }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(AccessDeniedException.class)
+    public Map<String, Object> accessDeniedExceptionHandler(){
+        HashMap<String, Object> errorAttributes = new LinkedHashMap<>();
+        errorAttributes.put("status", HttpStatus.FORBIDDEN.value());
+        errorAttributes.put("error", HttpStatus.FORBIDDEN.getReasonPhrase());
+        errorAttributes.put("message", "Access Denied");
+        errorAttributes.put("timestamp", new Date().toString());
+        return errorAttributes;
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(EmptyResultDataAccessException.class)
+    public Map<String, Object> emptyResultDataAccessExceptionHandler(){
+        HashMap<String, Object> errorAttributes = new LinkedHashMap<>();
+        errorAttributes.put("status", HttpStatus.NOT_FOUND.value());
+        errorAttributes.put("error", HttpStatus.NOT_FOUND.getReasonPhrase());
+        errorAttributes.put("message", "Entity not found");
         errorAttributes.put("timestamp", new Date().toString());
         return errorAttributes;
     }
