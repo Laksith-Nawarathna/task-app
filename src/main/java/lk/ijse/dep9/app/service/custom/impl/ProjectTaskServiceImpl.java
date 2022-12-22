@@ -3,6 +3,7 @@ package lk.ijse.dep9.app.service.custom.impl;
 import lk.ijse.dep9.app.dao.custom.ProjectDAO;
 import lk.ijse.dep9.app.dao.custom.TaskDAO;
 import lk.ijse.dep9.app.dto.ProjectDTO;
+import lk.ijse.dep9.app.dto.TaskDTO;
 import lk.ijse.dep9.app.entity.Project;
 import lk.ijse.dep9.app.exceptions.AccessDeniedException;
 import lk.ijse.dep9.app.service.custom.ProjectTaskService;
@@ -20,14 +21,13 @@ import java.util.stream.Collectors;
 @Component
 public class ProjectTaskServiceImpl implements ProjectTaskService {
 
-    private TaskDAO taskDAO;
-    private ProjectDAO projectDAO;
-
+    private final ProjectDAO projectDAO;
+    private final TaskDAO taskDAO;
     private final Transformer transformer;
 
-    public ProjectTaskServiceImpl(TaskDAO taskDAO, ProjectDAO projectDAO, Transformer transformer) {
-        this.taskDAO = taskDAO;
+    public ProjectTaskServiceImpl(ProjectDAO projectDAO, TaskDAO taskDAO, Transformer transformer) {
         this.projectDAO = projectDAO;
+        this.taskDAO = taskDAO;
         this.transformer = transformer;
     }
 
@@ -38,31 +38,53 @@ public class ProjectTaskServiceImpl implements ProjectTaskService {
 
     @Override
     public List<ProjectDTO> getAllProjects(String username) {
-        return projectDAO.findAllProjectsByUsername(username).stream().map(transformer::toProjectDTO).collect(Collectors.toList());
+        return projectDAO.findAllProjectsByUsername(username).stream().
+                map(transformer::toProjectDTO).collect(Collectors.toList());
     }
 
     @Override
     public ProjectDTO getProjectDetails(String username, int projectId) {
-        ProjectDTO project = projectDAO.findById(projectId).
-                map(transformer::toProjectDTO).orElseThrow(() -> new EmptyResultDataAccessException(1));
-        if (!project.getUsername().matches(username)) throw new AccessDeniedException();
-        return project;
+        return projectDAO.findById(projectId).map(transformer::toProjectDTO).get();
     }
 
     @Override
     public void renameProject(ProjectDTO project) {
-        Project projectEntity = projectDAO.findById(project.getId()).
-                orElseThrow(() -> new EmptyResultDataAccessException(1));
-        if (!projectEntity.getUsername().matches(project.getUsername())) throw new AccessDeniedException();
         projectDAO.update(transformer.toProject(project));
     }
 
     @Override
     public void deleteProject(String username, int projectId) {
-        Project project = projectDAO.findById(projectId).orElseThrow(
-                () -> new EmptyResultDataAccessException(1));
-        if (!project.getUsername().matches(username)) throw new AccessDeniedException();
         taskDAO.findAllByProjectId(projectId).forEach(task -> taskDAO.deleteById(task.getId()));
         projectDAO.deleteById(projectId);
+    }
+
+    @Override
+    public TaskDTO createNewTask(String username, TaskDTO task) {
+        return null;
+    }
+
+    @Override
+    public void renameTask(String username, TaskDTO task) {
+
+    }
+
+    @Override
+    public void deleteTask(String username, TaskDTO taskDTO) {
+
+    }
+
+    @Override
+    public TaskDTO getTaskDetails(String username, TaskDTO taskDTO) {
+        return null;
+    }
+
+    @Override
+    public List<TaskDTO> getAllTasks(String username, int projectId) {
+        return null;
+    }
+
+    @Override
+    public void updateTaskStatus(String username, TaskDTO taskDTO, boolean completed) {
+
     }
 }
