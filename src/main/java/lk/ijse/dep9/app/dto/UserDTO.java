@@ -10,6 +10,7 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Null;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 
@@ -19,6 +20,7 @@ import java.io.Serializable;
 @JsonIgnoreProperties(value = "password", allowSetters = true)
 public class UserDTO implements Serializable {
 
+    @Null(groups = ValidationGroups.Update.class, message = "Username cannot be updated")
     @NotBlank(message = "Username cannot be empty or null", groups = ValidationGroups.Create.class)
     private String username;
     @NotBlank(message = "Full Name cannot be empty or null")
