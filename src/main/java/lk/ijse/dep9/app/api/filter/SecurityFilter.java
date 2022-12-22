@@ -26,6 +26,10 @@ public class SecurityFilter extends HttpFilter {
 
     private UserService userService;
 
+    public SecurityFilter(UserService userService) {
+        this.userService = userService;
+    }
+
     @Override
     protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
         if (req.getServletPath().matches("/api/v1/users/?") && req.getMethod().equals("POST")){
@@ -40,14 +44,14 @@ public class SecurityFilter extends HttpFilter {
                 String credentials = new String(Base64.getDecoder().decode(token));
                 String username = credentials.split(":")[0];
                 String password = credentials.split(":")[1];
-                System.out.println(username +" : "+ password);
+//                System.out.println(username +" : "+ password);
                 try{
                     userService.verifyUser(username, password);
                     req.setAttribute("username", username);
                     chain.doFilter(req, res);
                     return;
                 }catch(AuthenticationException e){
-
+//                    do nothing
                 }
             }
 
@@ -55,7 +59,7 @@ public class SecurityFilter extends HttpFilter {
             HashMap<String, Object> errorAttributes = new LinkedHashMap<>();
             errorAttributes.put("status", HttpStatus.UNAUTHORIZED.value());
             errorAttributes.put("error", HttpStatus.UNAUTHORIZED.getReasonPhrase());
-            errorAttributes.put("message", "Invalid Login Credentials");
+            errorAttributes.put("message", "Access Denied");
             errorAttributes.put("timestamp", new Date().toString());
 
             ObjectMapper objectMapper = new ObjectMapper();
