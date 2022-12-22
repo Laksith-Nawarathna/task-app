@@ -1,6 +1,4 @@
 package lk.ijse.dep9.app;
-
-import lk.ijse.dep9.app.api.filter.SecurityFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
@@ -11,7 +9,7 @@ import javax.servlet.Filter;
 public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
     public WebAppInitializer() {
-        log.debug("Spring is starting.....!");
+        log.debug("Spring is starting..!");
     }
 
     @Override
@@ -27,15 +25,5 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
     @Override
     protected String[] getServletMappings() {
         return new String[]{"/"};
-    }
-
-
-    @Override
-    protected Filter[] getServletFilters() {
-        /* First request is came here and this filter forward it to the security filter.
-        * Because request should be authenticated before accessing controllers.
-        * and here filter proxy means -> it denotes another filter */
-        DelegatingFilterProxy filterProxy = new DelegatingFilterProxy("securityFilter");
-        return new Filter[]{filterProxy};
     }
 }

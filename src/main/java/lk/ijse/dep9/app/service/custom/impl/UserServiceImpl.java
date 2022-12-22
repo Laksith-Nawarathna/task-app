@@ -10,9 +10,13 @@ import lk.ijse.dep9.app.exceptions.AuthenticationException;
 import lk.ijse.dep9.app.service.custom.UserService;
 import lk.ijse.dep9.app.util.Transformer;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -21,16 +25,15 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
 
-    private final UserDAO userDAO;
-
-    private final ProjectDAO projectDAO;
     private final TaskDAO taskDAO;
+    private final ProjectDAO projectDAO;
+    private final UserDAO userDAO;
     private final Transformer transformer;
 
-    public UserServiceImpl(UserDAO userDAO, ProjectDAO projectDAO, TaskDAO taskDAO, Transformer transformer) {
-        this.userDAO = userDAO;
-        this.projectDAO = projectDAO;
+    public UserServiceImpl(TaskDAO taskDAO, ProjectDAO projectDAO, UserDAO userDAO, Transformer transformer) {
         this.taskDAO = taskDAO;
+        this.projectDAO = projectDAO;
+        this.userDAO = userDAO;
         this.transformer = transformer;
     }
 
@@ -38,15 +41,13 @@ public class UserServiceImpl implements UserService {
     public void createNewUserAccount(UserDTO userDTO) {
         userDTO.setPassword(DigestUtils.sha256Hex(userDTO.getPassword()));
         userDAO.save(transformer.toUser(userDTO));
-//        if (true) throw new RuntimeException("Failed saving");
-//        userDAO.save(new User("testing", "testing", "testing"));
     }
 
     @Override
     public UserDTO verifyUser(String username, String password) {
         UserDTO user = userDAO.findById(username).map(transformer::toUserDTO)
                 .orElseThrow(AuthenticationException::new);
-        if(DigestUtils.sha256(password).equals(user.getPassword())){
+        if (DigestUtils.sha256Hex(password).equals(user.getPassword())){
             return user;
         }
         throw new AuthenticationException();
@@ -72,5 +73,12 @@ public class UserServiceImpl implements UserService {
             projectDAO.deleteById(project.getId());
         }
         userDAO.deleteById(username);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        UserDTO user = userDAO.findById(username).map(transformer::toUserDTO).
+                orElseThrow(() -> new UsernameNotFoundException(username + " not found"));
+        return new User(user.getUsername(), user.getPassword(), new ArrayList<>());
     }
 }
