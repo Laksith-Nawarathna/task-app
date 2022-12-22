@@ -23,5 +23,7 @@ public class ProjectDTO implements Serializable {
     @Length(min = 3, message = "Project name should contain at least 3 characters")
     private String name;
 
+    private String username;
+
 
 }
