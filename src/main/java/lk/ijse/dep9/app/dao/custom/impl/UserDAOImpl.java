@@ -48,7 +48,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public Optional<?> findById(String username) {
+    public Optional<User> findById(String username) {
 
         return Optional.ofNullable(jdbc.query("SELECT FULL_NAME, PASSWORD FROM User WHERE username = ?", rs -> {
 //            if (rs.next()){
@@ -62,7 +62,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public List<?> findAll() {
+    public List<User> findAll() {
 
         return jdbc.query("SELECT * FROM User", (rst, rowNum) -> {
 //            ArrayList<User> userList = new ArrayList<>();

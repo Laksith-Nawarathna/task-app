@@ -10,8 +10,8 @@ public interface CrudDAO <T extends SuperEntity , ID extends Serializable> exten
     T save(T t);
     void update(T t);
     void deleteById(ID pk);
-    Optional<?> findById(ID pk);
-    List<?> findAll();
+    Optional<T> findById(ID pk);
+    List<T> findAll();
     long count();
     boolean existById(ID pk);
 }

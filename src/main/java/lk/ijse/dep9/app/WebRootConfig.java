@@ -2,12 +2,15 @@ package lk.ijse.dep9.app;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.jndi.JndiObjectFactoryBean;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.context.annotation.RequestScope;
 
@@ -19,6 +22,7 @@ import java.sql.SQLException;
 
 @Configuration
 @EnableTransactionManagement
+@ComponentScan
 public class WebRootConfig {
 
     /* a connection is created by JNDI Data Source per request (therefore new thread)
@@ -31,13 +35,6 @@ public class WebRootConfig {
         return jndi;
     }
 
-    /* a connection is created per request and only managed until response created*/
-//    @Bean
-//    @RequestScope
-//    public Connection connection(DataSource ds) throws SQLException {
-//        return DataSourceUtils.getConnection(ds); // to work with transactions DataSourceUtils is required
-//    }
-
     /* Here jdbc template makes a connection for an incoming request and associate it with a new thread */
     @Bean
     public JdbcTemplate jdbcTemplate(DataSource ds){
@@ -46,7 +43,7 @@ public class WebRootConfig {
 
     /* Platform transaction manager */
     @Bean
-    public DataSourceTransactionManager transactionManager(DataSource ds){
+    public PlatformTransactionManager transactionManager(DataSource ds){
         return new DataSourceTransactionManager(ds);
     }
 

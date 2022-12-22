@@ -51,7 +51,7 @@ public class ProjectDAOImpl implements ProjectDAO {
     }
 
     @Override
-    public Optional<?> findById(Integer id) {
+    public Optional<Project> findById(Integer id) {
 
         return Optional.ofNullable(jdbc.query("SELECT * FROM Project WHERE id=?", rst -> {
             return new Project(rst.getInt("id"), rst.getString("name"),
@@ -61,7 +61,7 @@ public class ProjectDAOImpl implements ProjectDAO {
     }
 
     @Override
-    public List<?> findAll() {
+    public List<Project> findAll() {
 
         return jdbc.query("SELECT * FROM Project", (rst, rowIndex) ->
                 new Project(rst.getInt("id"), rst.getString("name"),

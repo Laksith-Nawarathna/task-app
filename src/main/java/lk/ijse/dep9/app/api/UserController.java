@@ -43,7 +43,7 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PatchMapping(value = "/me", consumes = "application/json")
-    public void updateUserAccountDetails(@Validated(ValidationGroups.Create.class) @RequestBody UserDTO user) {
+    public void updateUserAccountDetails(@Valid @RequestBody UserDTO user) {
         System.out.println(user);
     }
 

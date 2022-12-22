@@ -51,7 +51,7 @@ public class TaskDAOImpl implements TaskDAO {
     }
 
     @Override
-    public Optional<?> findById(Integer id) {
+    public Optional<Task> findById(Integer id) {
 
         return Optional.ofNullable(jdbc.query("SELECT * FROM Task WHERE id = ?", rst -> {
             return new Task(rst.getInt("id"),
@@ -63,7 +63,7 @@ public class TaskDAOImpl implements TaskDAO {
     }
 
     @Override
-    public List<?> findAll() {
+    public List<Task> findAll() {
 
         return jdbc.query("SELECT * FROM Task", (rst, rowNum) ->
                 new Task(rst.getInt("id"),

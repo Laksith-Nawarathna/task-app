@@ -2,7 +2,10 @@ package lk.ijse.dep9.app.api.filter;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lk.ijse.dep9.app.dto.UserDTO;
+import lk.ijse.dep9.app.service.custom.UserService;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -15,13 +18,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+
+@Component
 public class SecurityFilter extends HttpFilter {
 
     @Override
     protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
         if (req.getServletPath().matches("/api/v1/users/?") && req.getMethod().equals("POST")){
             chain.doFilter(req, res);
-        } else if (req.getServletPath().matches("/api/v1/auth/.*")) {
+        } else if (req.getServletPath().matches("/api/v1/auth/.+")) {
             chain.doFilter(req, res);
         }else{
 
@@ -31,7 +36,6 @@ public class SecurityFilter extends HttpFilter {
                 String credentials = new String(Base64.getDecoder().decode(token));
                 String username = credentials.split(":")[0];
                 String password = credentials.split(":")[1];
-
                 System.out.println(username +" : "+ password);
             }
 
